@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements ScheduleParserInterface {
     private ArrayAdapter<String> adapter;
     private ProgressBar progressBar;
-    private Spinner monthsSelect;
-    private Spinner daysSelect;
+    private ListView datesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +35,19 @@ public class MainActivity extends AppCompatActivity implements ScheduleParserInt
     }
 
     @Override
-    public void onParsingDone(ArrayList<SpinnerOption> months) {
+    public void onParsingDone(ArrayList<SpinnerOption> SpinnerData) {
         ArrayList<String> date= new ArrayList<>();
-        for(SpinnerOption month: months) {
-            date.add(month.getDate());
+        for(SpinnerOption data: SpinnerData) {
+            date.add(data.getDate());
         }
         adapter = new ArrayAdapter<>(this, R.layout.row,date);
 
-        monthsSelect.setAdapter(adapter);
+        datesList.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
     }
 
     private void init() {
         progressBar = findViewById(R.id.progressBar);
-        monthsSelect = findViewById(R.id.months_select);
-        daysSelect = findViewById(R.id.days_select);
-        daysSelect.setEnabled(false);
+        datesList = findViewById(R.id.list);
     }
 }

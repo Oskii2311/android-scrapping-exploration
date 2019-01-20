@@ -40,23 +40,23 @@ public class ScheduleParser extends AsyncTask<FetchConfiguration, Void, ArrayLis
     private ArrayList<SpinnerOption> getData(String url) {
         ArrayList<SpinnerOption> data = new ArrayList<>();
 
-
         try {
             Document doc = Jsoup.connect(url).get();
             Elements tables = doc.getElementsByTag("table");
-            Elements rows = tables.last().getElementsByTag("tr");
+            for(Element table: tables) {
+                Elements rows = table.getElementsByTag("tr");
 
-            for (Element row : rows) {
-                Elements links = row.getElementsByTag("a");
+                for (Element row : rows) {
+                    Elements links = row.getElementsByTag("a");
 
-                for (Element link : links) {
-                    String urlToSchedule = link.attr("abs:href");
-                    String[] parts = urlToSchedule.split(Pattern.quote("plan-"));
-
-                    data.add(new SpinnerOption(parts[1], urlToSchedule));
+                    for (Element link : links) {
+                        String urlToSchedule = link.attr("abs:href");
+                        String[] parts = urlToSchedule.split(Pattern.quote("plan-"));
+                        if (parts.length > 1) {
+                            data.add(new SpinnerOption(parts[1], urlToSchedule));
+                        }
+                    }
                 }
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
