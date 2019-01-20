@@ -2,43 +2,66 @@ package com.example.webScrapper.ScheduleParser;
 
 import android.os.AsyncTask;
 
+import com.example.webScrapper.Models.FetchConfiguration;
+import com.example.webScrapper.Models.SpinnerOption;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 
-public class ScheduleParser extends AsyncTask<Void, Void, ArrayList<String>> {
+public class ScheduleParser extends AsyncTask<FetchConfiguration, Void, ArrayList<SpinnerOption>> {
     private ScheduleParserInterface scheduleParserInterface;
-    private Elements rows;
-    private ArrayList<String> months = new ArrayList<>();
 
     public ScheduleParser(ScheduleParserInterface scheduleParserInterface) {
         this.scheduleParserInterface = scheduleParserInterface;
     }
 
     @Override
-    protected ArrayList<String> doInBackground(Void... voids) {
+    protected ArrayList<SpinnerOption> doInBackground(FetchConfiguration... params) {
+        if (params[0].getConfigurationType() == "SPINNERDATA") {
+            return this.getData(params[0].getUrl());
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<SpinnerOption> data) {
+        super.onPostExecute(data);
+
+        scheduleParserInterface.onParsingDone(data);
+    }
+
+    private ArrayList<SpinnerOption> getData(String url) {
+        ArrayList<SpinnerOption> data = new ArrayList<>();
+
 
         try {
-            Document doc = Jsoup.connect("https://inf.ug.edu.pl/zaoczne-plan").get();
+            Document doc = Jsoup.connect(url).get();
             Elements tables = doc.getElementsByTag("table");
-            rows = tables.first().getElementsByTag("tr");
+            Elements rows = tables.last().getElementsByTag("tr");
+
             for (Element row : rows) {
-                months.add(row.getElementsByTag("td").first().text());
+                Elements links = row.getElementsByTag("a");
+
+                for (Element link : links) {
+                    String urlToSchedule = link.attr("abs:href");
+                    String[] parts = urlToSchedule.split(Pattern.quote("plan-"));
+
+                    data.add(new SpinnerOption(parts[1], urlToSchedule));
+                }
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return months;
+        return data;
     }
 
-    @Override
-    protected void onPostExecute(ArrayList<String> months) {
-        super.onPostExecute(months);
-
-        scheduleParserInterface.onParsingDone(months);
-    }
 }

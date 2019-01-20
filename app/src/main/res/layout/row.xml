@@ -2,5 +2,7 @@
     android:id="@+id/Row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:height="60dp"
+    android:gravity="center"
     android:textSize="15sp" >
 </TextView>
