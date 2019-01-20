@@ -1,8 +1,10 @@
-package com.example.test;
+package com.example.webScrapper;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.test.R;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.webScrapper;
 
 import android.os.AsyncTask;
 
