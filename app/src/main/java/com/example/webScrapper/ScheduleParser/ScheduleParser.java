@@ -1,4 +1,4 @@
-package com.example.webScrapper;
+package com.example.webScrapper.ScheduleParser;
 
 import android.os.AsyncTask;
 
@@ -10,13 +10,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 
-public class Scrapper extends AsyncTask<Void, Void, ArrayList<String>> {
-    private ParserResponseInterface parserResponseInterface;
+public class ScheduleParser extends AsyncTask<Void, Void, ArrayList<String>> {
+    private ScheduleParserInterface scheduleParserInterface;
     private Elements rows;
     private ArrayList<String> months = new ArrayList<>();
 
-    public Scrapper(ParserResponseInterface parserResponseInterface) {
-        this.parserResponseInterface = parserResponseInterface;
+    public ScheduleParser(ScheduleParserInterface scheduleParserInterface) {
+        this.scheduleParserInterface = scheduleParserInterface;
     }
 
     @Override
@@ -39,6 +39,6 @@ public class Scrapper extends AsyncTask<Void, Void, ArrayList<String>> {
     protected void onPostExecute(ArrayList<String> months) {
         super.onPostExecute(months);
 
-        parserResponseInterface.onParsingDone(months);
+        scheduleParserInterface.onParsingDone(months);
     }
 }

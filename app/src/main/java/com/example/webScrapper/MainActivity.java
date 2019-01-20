@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.test.R;
+import com.example.webScrapper.ScheduleParser.ScheduleParser;
+import com.example.webScrapper.ScheduleParser.ScheduleParserInterface;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements ParserResponseInterface {
+public class MainActivity extends AppCompatActivity implements ScheduleParserInterface {
     private TextView textView;
 
     @Override
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements ParserResponseInt
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.result);
 
-        new Scrapper(this).execute();
+        new ScheduleParser(this).execute();
     }
 
     @Override
