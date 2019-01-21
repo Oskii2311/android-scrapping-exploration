@@ -2,66 +2,75 @@ package com.example.webScrapper.ScheduleParser;
 
 import android.os.AsyncTask;
 
-import com.example.webScrapper.Models.FetchConfiguration;
-import com.example.webScrapper.Models.SpinnerOption;
+import com.example.webScrapper.MainActivity;
+import com.example.webScrapper.Models.ScheduleRow;
+import com.example.webScrapper.Models.YearSchedule;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.time.Year;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
-
-public class ScheduleParser extends AsyncTask<FetchConfiguration, Void, ArrayList<SpinnerOption>> {
+public class ScheduleParser extends AsyncTask<String, Void, ArrayList<YearSchedule>> {
     private ScheduleParserInterface scheduleParserInterface;
 
-    public ScheduleParser(ScheduleParserInterface scheduleParserInterface) {
+    public ScheduleParser(MainActivity scheduleParserInterface) {
         this.scheduleParserInterface = scheduleParserInterface;
     }
 
     @Override
-    protected ArrayList<SpinnerOption> doInBackground(FetchConfiguration... params) {
-        if (params[0].getConfigurationType() == "SPINNERDATA") {
-            return this.getData(params[0].getUrl());
-        }
-
-        return null;
+    protected ArrayList<YearSchedule> doInBackground(String... params) {
+        return this.getSchedule(params[0]);
     }
 
     @Override
-    protected void onPostExecute(ArrayList<SpinnerOption> data) {
+    protected void onPostExecute(ArrayList<YearSchedule>  data) {
         super.onPostExecute(data);
 
-        scheduleParserInterface.onParsingDone(data);
+        scheduleParserInterface.onParsingScheduleDone(data);
     }
 
-    private ArrayList<SpinnerOption> getData(String url) {
-        ArrayList<SpinnerOption> data = new ArrayList<>();
+    private ArrayList<YearSchedule> getSchedule(String url) {
+        ArrayList<YearSchedule> yearsSchedule = new ArrayList<>();
+        ArrayList<String> years = new ArrayList<>();
 
         try {
             Document doc = Jsoup.connect(url).get();
-            Elements tables = doc.getElementsByTag("table");
-            for(Element table: tables) {
-                Elements rows = table.getElementsByTag("tr");
+            Element content = doc.getElementById("middle");
+            Elements artBody = content.getElementsByClass("artBody");
+            Elements lists = artBody.first().getElementsByTag("ul");
+            Elements headers = artBody.first().getElementsByTag("h1");
 
+            for (Element header : headers) {
+                years.add(header.text());
+            }
+            int counter = 0;
+
+            for (Element list : lists) {
+                Elements rows = list.getElementsByTag("li");
+                ArrayList<ScheduleRow> data = new ArrayList<>();
                 for (Element row : rows) {
-                    Elements links = row.getElementsByTag("a");
+                    String[] parts = row.text().split(",");
+                    String hours = parts[0];
+                    String rest = "";
 
-                    for (Element link : links) {
-                        String urlToSchedule = link.attr("abs:href");
-                        String[] parts = urlToSchedule.split(Pattern.quote("plan-"));
-                        if (parts.length > 1) {
-                            data.add(new SpinnerOption(parts[1], urlToSchedule));
+                    Element lectureType = row.getElementsByTag("b").first();
+                    for (int i = 0; i < parts.length; i++) {
+                        if (i > 1) {
+                            rest += parts[i];
                         }
                     }
+                    data.add(new ScheduleRow(years.get(counter), hours, lectureType.text(), rest));
                 }
+                 yearsSchedule.add(new YearSchedule(years.get(counter), data));
+                counter++;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return data;
+        return yearsSchedule;
     }
-
 }

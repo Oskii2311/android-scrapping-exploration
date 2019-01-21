@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Plan Informatyka Niestacjonarne</string>
+    <string name="table_layout_4_open">Godzina</string>
+    <string name="table_layout_4_open_shortcut">Nazwa</string>
+    <string name="table_layout_5_open_shortcut">Opis</string>
+
 </resources>

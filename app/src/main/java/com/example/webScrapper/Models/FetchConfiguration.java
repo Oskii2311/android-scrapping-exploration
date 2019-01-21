@@ -16,10 +16,12 @@ public class FetchConfiguration {
 
     public String getConfigurationType() {
         switch (this.type) {
-            case SPINNERDATA:
-                return "SPINNERDATA";
+            case LISTDATA:
+                return "LISTDATA";
             case SCHEDULE:
                 return "SCHEDULE";
+            case STUDENTSYEAR:
+                return "STUDENTSYEAR";
             default:
                 return null;
         }

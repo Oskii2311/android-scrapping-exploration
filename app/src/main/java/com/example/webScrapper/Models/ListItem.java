@@ -1,10 +1,10 @@
 package com.example.webScrapper.Models;
 
-public class SpinnerOption {
+public class ListItem {
     private String date;
     private String url;
 
-    public SpinnerOption(String date, String url) {
+    public ListItem(String date, String url) {
         this.date = date;
         this.url = url;
     }
