@@ -37,8 +37,9 @@ public class ScheduleActivity extends AppCompatActivity {
         table.setGravity(Gravity.CENTER);
         TableRow[] tableRows = {new TableRow(this), new TableRow(this), new TableRow(this), new TableRow(this)};
         TextView[] textViews = {new TextView(this), new TextView(this), new TextView(this), new TextView(this)};
+
         LayerDrawable bottomBorder = getBorders(
-                0xFFFFFFFF,
+                0xFFFAFAFA,
                 0xFF000000,
                 0,
                 0,

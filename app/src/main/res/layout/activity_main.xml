@@ -4,19 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.webScrapper.MainActivity">
+    tools:context="com.example.webScrapper.MainActivity"
+    android:background="#FAFAFA"
+    >
 
-    <!--<Spinner-->
-        <!--android:id="@+id/months_select"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="56dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.374"-->
-        <!--tools:layout_editor_absoluteX="0dp" />-->
-    <!---->
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
@@ -48,7 +39,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 
 </android.support.constraint.ConstraintLayout>
