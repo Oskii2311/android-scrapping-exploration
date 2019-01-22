@@ -1,6 +1,9 @@
 package com.example.webScrapper;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -34,6 +37,14 @@ public class ScheduleActivity extends AppCompatActivity {
         table.setGravity(Gravity.CENTER);
         TableRow[] tableRows = {new TableRow(this), new TableRow(this), new TableRow(this), new TableRow(this)};
         TextView[] textViews = {new TextView(this), new TextView(this), new TextView(this), new TextView(this)};
+        LayerDrawable bottomBorder = getBorders(
+                0xFFFFFFFF,
+                0xFF000000,
+                0,
+                0,
+                0,
+                2
+        );
 
         for (TableRow row : tableRows) {
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -54,20 +65,45 @@ public class ScheduleActivity extends AppCompatActivity {
         textViews[2].setText(lecture.getType());
         textViews[2].setTextSize(16);
         textViews[2].setTypeface(null, Typeface.BOLD);
-        if(lecture.getType().isEmpty()) {
+
+        if (lecture.getType().isEmpty()) {
             tableRows[2].setVisibility(View.GONE);
         }
 
         textViews[3].setText(lecture.getDescription());
         textViews[3].setPadding(0, 0, 0, 20);
         textViews[3].setTextSize(16);
+        textViews[3].setBackground(bottomBorder);
 
         for (int i = 0; i < tableRows.length; i++) {
-            if(i != 3) {
+            if (i != 3) {
                 textViews[i].setPadding(0, 0, 0, 4);
             }
             table.addView(tableRows[i]);
             tableRows[i].addView(textViews[i]);
         }
+    }
+
+    private LayerDrawable getBorders(int bgColor, int borderColor,
+                                     int left, int top, int right, int bottom) {
+        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
+        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
+
+        Drawable[] drawables = new Drawable[]{
+                borderColorDrawable,
+                backgroundColorDrawable
+        };
+
+        LayerDrawable layerDrawable = new LayerDrawable(drawables);
+
+        layerDrawable.setLayerInset(
+                1,
+                left,
+                top,
+                right,
+                bottom
+        );
+
+        return layerDrawable;
     }
 }
