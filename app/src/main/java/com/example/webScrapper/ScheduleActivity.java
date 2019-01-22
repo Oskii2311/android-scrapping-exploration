@@ -1,8 +1,10 @@
 package com.example.webScrapper;
 
-import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -13,7 +15,8 @@ import com.example.webScrapper.Models.ScheduleRow;
 import java.util.ArrayList;
 
 public class ScheduleActivity extends AppCompatActivity {
-private TableLayout table;
+    private TableLayout table;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,33 +25,49 @@ private TableLayout table;
         final ArrayList<ScheduleRow> schedule = (ArrayList<ScheduleRow>) bundleRows.getSerializable("schedule");
 
         table = findViewById(R.id.table);
-        for(ScheduleRow lecture: schedule) {
+        for (ScheduleRow lecture : schedule) {
             setTableSettings(lecture);
         }
     }
 
     private void setTableSettings(ScheduleRow lecture) {
-        TableRow row = new TableRow(this);
-        TableRow row1 = new TableRow(this);
-        TableRow row2 = new TableRow(this);
+        table.setGravity(Gravity.CENTER);
+        TableRow[] tableRows = {new TableRow(this), new TableRow(this), new TableRow(this), new TableRow(this)};
+        TextView[] textViews = {new TextView(this), new TextView(this), new TextView(this), new TextView(this)};
 
-        TextView tv = new TextView(this);
-        TextView tv1 = new TextView(this);
-        TextView tv2 = new TextView(this);
+        for (TableRow row : tableRows) {
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+        }
 
-        tv.setText(lecture.getHours());
-        tv1.setText(lecture.getType());
-        tv2.setText(lecture.getDescription());
-        tv2.setPaintFlags(tv2.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-        tv2.setPadding(0,0,0,8);
+        for (TextView textView : textViews) {
+            textView.setWidth(TableLayout.LayoutParams.WRAP_CONTENT);
+        }
 
-        table.addView(row);
-        table.addView(row1);
-        table.addView(row2);
+        textViews[0].setText(lecture.getHours());
+        textViews[0].setTextSize(18);
+        textViews[0].setTypeface(null, Typeface.BOLD);
 
-        row.addView(tv);
-        row1.addView(tv1);
-        row2.addView(tv2);
+        textViews[1].setText(lecture.getName());
+        textViews[1].setTextSize(16);
+        textViews[1].setTypeface(null, Typeface.BOLD);
+
+        textViews[2].setText(lecture.getType());
+        textViews[2].setTextSize(16);
+        textViews[2].setTypeface(null, Typeface.BOLD);
+        if(lecture.getType().isEmpty()) {
+            tableRows[2].setVisibility(View.GONE);
+        }
+
+        textViews[3].setText(lecture.getDescription());
+        textViews[3].setPadding(0, 0, 0, 20);
+        textViews[3].setTextSize(16);
+
+        for (int i = 0; i < tableRows.length; i++) {
+            if(i != 3) {
+                textViews[i].setPadding(0, 0, 0, 4);
+            }
+            table.addView(tableRows[i]);
+            tableRows[i].addView(textViews[i]);
+        }
     }
-
 }

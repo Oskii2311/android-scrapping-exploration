@@ -68,15 +68,20 @@ public class ScheduleParser extends AsyncTask<String, Void, ArrayList<YearSchedu
     private ScheduleRow getScheduleRow(Element row, ArrayList<String> years, int counter) {
         String[] parts = row.text().split(",");
         String hours = parts[0];
-        Element lectureType = row.getElementsByTag("b").first();
+        Element lectureName = row.getElementsByTag("b").first();
+        String lectureType = "";
         String rest = "";
 
         for (int i = 0; i < parts.length; i++) {
             if (i > 1) {
-                rest += parts[i];
+                if(parts[i].trim().equals("wykład") || parts[i].trim().equals("ćwiczenia") || parts[i].trim().equals("laboratorium")) {
+                    lectureType = parts[2];
+                }else {
+                    rest += parts[i];
+                }
             }
         }
 
-        return new ScheduleRow(years.get(counter), hours, lectureType.text(), rest);
+        return new ScheduleRow(years.get(counter), hours, lectureName.text(),lectureType.trim(), rest.trim());
     }
 }
