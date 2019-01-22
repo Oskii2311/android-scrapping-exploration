@@ -23,7 +23,6 @@ public class DateParser extends AsyncTask<String, Void, ArrayList<ListItem>> {
     @Override
     protected ArrayList<ListItem> doInBackground(String... params) {
         return this.listData(params[0]);
-
     }
 
     @Override

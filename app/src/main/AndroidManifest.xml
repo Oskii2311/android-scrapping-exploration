@@ -11,8 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.webScrapperScheduleView.ScheduleActivity"></activity>
-        <activity android:name="com.example.webScrapperSecondView.YearActivity" />
+        <activity android:name="com.example.webScrapper.ScheduleActivity"></activity>
+        <activity android:name="com.example.webScrapper.YearActivity" />
         <activity android:name="com.example.webScrapper.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

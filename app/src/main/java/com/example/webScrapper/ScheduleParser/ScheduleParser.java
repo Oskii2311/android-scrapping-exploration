@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.time.Year;
 import java.util.ArrayList;
 
 public class ScheduleParser extends AsyncTask<String, Void, ArrayList<YearSchedule>> {
@@ -27,7 +26,7 @@ public class ScheduleParser extends AsyncTask<String, Void, ArrayList<YearSchedu
     }
 
     @Override
-    protected void onPostExecute(ArrayList<YearSchedule>  data) {
+    protected void onPostExecute(ArrayList<YearSchedule> data) {
         super.onPostExecute(data);
 
         scheduleParserInterface.onParsingScheduleDone(data);
@@ -43,34 +42,41 @@ public class ScheduleParser extends AsyncTask<String, Void, ArrayList<YearSchedu
             Elements artBody = content.getElementsByClass("artBody");
             Elements lists = artBody.first().getElementsByTag("ul");
             Elements headers = artBody.first().getElementsByTag("h1");
+            int counter = 0;
 
             for (Element header : headers) {
                 years.add(header.text());
             }
-            int counter = 0;
 
             for (Element list : lists) {
                 Elements rows = list.getElementsByTag("li");
                 ArrayList<ScheduleRow> data = new ArrayList<>();
                 for (Element row : rows) {
-                    String[] parts = row.text().split(",");
-                    String hours = parts[0];
-                    String rest = "";
-
-                    Element lectureType = row.getElementsByTag("b").first();
-                    for (int i = 0; i < parts.length; i++) {
-                        if (i > 1) {
-                            rest += parts[i];
-                        }
-                    }
-                    data.add(new ScheduleRow(years.get(counter), hours, lectureType.text(), rest));
+                    data.add(getScheduleRow(row, years, counter));
                 }
-                 yearsSchedule.add(new YearSchedule(years.get(counter), data));
+                yearsSchedule.add(new YearSchedule(years.get(counter), data));
                 counter++;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return yearsSchedule;
+    }
+
+    private ScheduleRow getScheduleRow(Element row, ArrayList<String> years, int counter) {
+        String[] parts = row.text().split(",");
+        String hours = parts[0];
+        Element lectureType = row.getElementsByTag("b").first();
+        String rest = "";
+
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 1) {
+                rest += parts[i];
+            }
+        }
+
+        return new ScheduleRow(years.get(counter), hours, lectureType.text(), rest);
     }
 }
